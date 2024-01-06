@@ -20,7 +20,7 @@ const addToFav = async (req, res) => {
 const removeFromFav = async (req, res) => {
     console.log("remove fav");
     try {
-      const { userId, subjectId } = req.body;
+      const { userId, subjectId } = req.query;
       const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({ error: 'User not found' });
