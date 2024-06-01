@@ -1,7 +1,7 @@
 const Course = require('../Models/subModel');
 
 // Controller to get subjects by semester
-exports.getSubjectsBySemester = async (req, res) => {
+ const getSubjectsBySemester = async (req, res) => {
     const semester = req.params.semester;
   
     try {
@@ -19,3 +19,5 @@ exports.getSubjectsBySemester = async (req, res) => {
       res.status(500).json({ success: false, error: error.message });
     }
   };
+
+  module.exports = { getSubjectsBySemester }
