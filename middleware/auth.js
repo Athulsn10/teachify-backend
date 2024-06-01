@@ -7,16 +7,12 @@ const protect = async (req,res,next)=>{
         req.headers.authorization && req.headers.authorization.startsWith("Bearer")
     ){
         try{
-            // remove bearer and take token
             token = req.headers.authorization.split(" ")[1]
-            // token is decode id
             const decoded = jwt.verify(token,process.env.JWT_TOKEN)
-            // return user id without the password
             req.user=await User.findById(decoded.id).select("-password");
-            // move to nxt operation
             next(); 
         }catch (error) {
-            res.status(401).json({ error: 'Token Failed due to unauthorized' });
+            res.status(401).json({ message: 'Unauthorized Request, Please Login Again' });
         }
     }
     

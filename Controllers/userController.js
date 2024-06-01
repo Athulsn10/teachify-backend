@@ -7,16 +7,14 @@ const regUser = async (req, res) => {
   // console.log(req.body);
   
   try {
-    // Validate if required fields are present
     if (!name || !email || !password) {
-      res.status(400).json({ error: 'Please provide all required fields' });
+      res.status(400).json({ message: 'Please provide all required fields' });
       return;
     }
 
-    // Check if the user with the provided email already exists
     const userExists = await User.findOne({ email });
     if (userExists) {
-      res.status(400).json({ error: 'User already exists' });
+      res.status(400).json({ message: 'User already exists' });
       return;
     }
 
@@ -41,23 +39,31 @@ const regUser = async (req, res) => {
 };
 
 const authUser = async (req, res) => {
-  const {email , password} = req.body;
-  const user = await User.findOne({email})
-  // console.log(user);
-  const pass = user.password
-  // console.log(pass);
-  if(pass == password){
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      token: generateToken(user._id)
-  })
-  }else{
-    res.status(401);
-    throw new Error("invalid credentials")
-  }
+  const { email, password } = req.body;
+  
+  try {
+    const user = await User.findOne({ email });
 
-}
+    if (user) {
+      const pass = user.password;
+      if (pass === password) {
+        res.status(200).json({
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+          token: generateToken(user._id)
+        });
+      } else {
+        res.status(401).json({ message: "Invalid credentials" });
+      }
+    } else {
+      res.status(401).json({ message: "User not found" });
+    }
+  } catch (error) {
+    console.error('Error during user authentication:', error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
+
 
 module.exports = { regUser, authUser };
