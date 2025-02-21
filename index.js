@@ -1,12 +1,12 @@
 require('dotenv').config()
 const courseRoutes = require('./Routes/router');
 const userRoutes = require('./Routes/userRouter');
-const express = require('express')
-const cors = require('cors')
-require('./DB/connection')
-const app = express()
-app.use(cors())
-app.use(express.json())
+const express = require('express');
+const cors = require('cors');
+require('./DB/connection');
+const app = express();
+app.use(cors());
+app.use(express.json());
 
 
 app.use('/api/data', courseRoutes);
